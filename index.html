@@ -1,11 +1,442 @@
-<html>
-  <head>
-    <title>NOFILE Console</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOFILE-Console - Enhanced Terminal with Custom Commands</title>
     <link rel="icon" href="icon.png">
     <style>
-      body {
-        background-color: black;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #ddd;
+            font-style: italic;
+        }
+
+        nav {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        section {
+            background: white;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            line-height: 1.8;
+        }
+
+        .commands-section {
+            background: #f5f5f5;
+            padding: 2rem;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .command-group {
+            margin-bottom: 2rem;
+        }
+
+        .command-group h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .command-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .command-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .command-tag:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .command-tag.extension {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .command-tag.special {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .platform-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .platform-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .platform-card .emoji {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .tech-info h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            nav a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+
+            section {
+                padding: 1.5rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
-  </head>
+</head>
+<body>
+    <header>
+        <h1>🚀 NOFILE-Console</h1>
+        <p>Enhance Your Terminal with Powerful Custom Commands</p>
+    </header>
+
+    <nav>
+        <a href="#features">Features</a>
+        <a href="#commands">Commands</a>
+        <a href="#platforms">Platforms</a>
+        <a href="#about">About</a>
+    </nav>
+
+    <div class="container">
+        <!-- Features Section -->
+        <section id="features">
+            <h2>✨ Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🎯 Enhanced Terminal</h3>
+                    <p>Supercharge your command-line experience with a comprehensive set of custom commands designed to boost productivity.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💻 Cross-Platform</h3>
+                    <p>Works seamlessly on Windows, macOS, and Linux. Write once, run everywhere with full compatibility.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🛠️ CMD Commands</h3>
+                    <p>Full support for Windows CMD commands alongside custom extensions for an integrated experience.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔧 Extensible</h3>
+                    <p>Easily add new commands through extensions. Currently includes cat, type, and touch commands.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ Lightning Fast</h3>
+                    <p>Built with Python for rapid execution and minimal resource consumption.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎨 Audio Support[beta]</h3>
+                    <p>Integrated sound capabilities with playsound and stopsound commands for multimedia applications.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Commands Section -->
+        <section id="commands">
+            <h2>📋 Available Commands</h2>
+            
+            <div class="commands-section">
+                <div class="command-group">
+                    <h3>📁 File & Directory Management</h3>
+                    <div class="command-list">
+                        <div class="command-tag">ls</div>
+                        <div class="command-tag">dir</div>
+                        <div class="command-tag">mkdir</div>
+                        <div class="command-tag">cd</div>
+                        <div class="command-tag">chdir</div>
+                        <div class="command-tag">pwd</div>
+                        <div class="command-tag">tree</div>
+                        <div class="command-tag">./</div>
+                    </div>
+                </div>
+
+                <div class="command-group">
+                    <h3>🖥️ Terminal Control</h3>
+                    <div class="command-list">
+                        <div class="command-tag">cls</div>
+                        <div class="command-tag">clear</div>
+                        <div class="command-tag">title</div>
+                        <div class="command-tag">color</div>
+                        <div class="command-tag">pause</div>
+                        <div class="command-tag">exit</div>
+                    </div>
+                </div>
+
+                <div class="command-group">
+                    <h3>🔊 Audio Commands</h3>
+                    <div class="command-list">
+                        <div class="command-tag">playsound</div>
+                        <div class="command-tag">playsound2</div>
+                        <div class="command-tag">stopsound</div>
+                    </div>
+                </div>
+
+                <div class="command-group">
+                    <h3>🎯 Utility Commands</h3>
+                    <div class="command-list">
+                        <div class="command-tag">help</div>
+                        <div class="command-tag">bash</div>
+                        <div class="command-tag">goto</div>
+                        <div class="command-tag">:</div>
+                        <div class="command-tag">lang</div>
+                        <div class="command-tag special">secret</div>
+                    </div>
+                </div>
+
+                <div class="command-group">
+                    <h3>🔌 Extension Commands</h3>
+                    <div class="command-list">
+                        <div class="command-tag extension">cat</div>
+                        <div class="command-tag extension">type</div>
+                        <div class="command-tag extension">touch</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Platforms Section -->
+        <section id="platforms">
+            <h2>🌍 Cross-Platform Support</h2>
+            <div class="platform-section">
+                <div class="platform-card">
+                    <div class="emoji">🪟</div>
+                    <div>Windows</div>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">Full CMD integration</p>
+                </div>
+                <div class="platform-card">
+                    <div class="emoji">🍎</div>
+                    <div>macOS</div>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">Native support</p>
+                </div>
+                <div class="platform-card">
+                    <div class="emoji">🐧</div>
+                    <div>Linux</div>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">Full compatibility</p>
+                </div>
+            </div>
+
+            <div class="tech-info">
+                <h3>🔧 Technical Details</h3>
+                <p><strong>Language:</strong> Python 100%</p>
+                <p><strong>Type:</strong> Terminal Enhancement Tool</p>
+                <p><strong>By:</strong> Nofileteams</p>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <h2>ℹ️ About NOFILE-Console</h2>
+            <p>
+                NOFILE-Console is a powerful terminal enhancement tool built with Python that brings an extensive collection of custom commands to your command-line interface. Whether you're working on Windows, macOS, or Linux, NOFILE-Console provides a unified and intuitive experience with commands for file management, terminal control, audio playback, and system utilities.
+            </p>
+            <p style="margin-top: 1rem;">
+                Designed for developers, system administrators, and power users, NOFILE-Console simplifies complex terminal operations and extends your shell's capabilities through a well-organized command structure and extensible architecture.
+            </p>
+            <h3 style="margin-top: 2rem; color: #667eea;">Getting Started</h3>
+            <p style="margin-top: 1rem;">
+                To get started with NOFILE-Console, please go to the download site. Currently, it is compatible with Windows. the MacBook version is currently in development.
+            </p>
+            <a href="download.html" class="btn-primary">Download→</a>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024-2026 NOFILE-Console. All rights reserved.</p>
+        <p>
+            <a href="https://youtube.com/@hayato807">Translator</a> | 
+            <a href="https://youtube.com/@nofileteams">Organization</a>
+        </p>
+        <p style="margin-top: 1rem; color: #999;">Enhance Your Terminal, Empower Your Workflow</p>
+    </footer>
+</body>
 </html>
