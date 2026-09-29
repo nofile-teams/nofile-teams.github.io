@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<title>Undertale test</title>
+		<link rel="icon" href="icon.png">
+		<style>
+			body {
+					background-color: black;
+				}
+			.canvas {
+					background-color: black;
+					width: 100vw;
+					height: 100vh;
+					max-width: 100%;
+					max-height: 100%;
+					object-fit: contain;
+					image-rendering: -moz-crisp-edges;
+					image-rendering: -webkit-crisp-edges;
+					image-rendering: pixelated;
+					image-rendering: crisp-edges;
+				}
+			.center {
+					text-align: center;
+				}
+		</style>
+	</head>
+	<body>
+		<div class="center">
+			<canvas id="canvas" class="canvas" width="480" height="360"></canvas>
+			<script src="main.js"></script>
+		</div>
+	</body>
+</html>
