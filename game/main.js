@@ -9,12 +9,13 @@ const mask = new Path2D();
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const sound_runsword = new Audio("src/knife_dance.wav");
+const sound_hurt = new Audio("src/hurt.wav");
 const sound_chargesword = new Audio("src/knight_summon_blade00.wav");
-//const sound_music = new Audio("src/knight.ogg");
+const sound_music = new Audio("src/knight.ogg");
 const sound_charge = new Audio("src/charge.wav");
 const sound_cut = new Audio("src/cut.wav");
-//sound_music.loop = true;
-//sound_music.play();
+sound_music.loop = true;
+sound_music.play();
 
 const sprite_s1 = new Image;
 const sprite_s2 = new Image;
@@ -85,6 +86,10 @@ function touch(x, y, w, h, x2, y2, w2, h2) {
 		y < y2 + h2 &&
 		y + h > y2
 	);
+};
+
+function damage() {
+	sound_hurt.play();
 };
 
 class player {
@@ -197,8 +202,8 @@ class sword {
 			this.y = this.y + Math.sin(this.r * Math.PI / 180) * 25;
 			clone.push(new sword_fade(this.x, this.y, this.width, this.height, this.r, this.trans, 40, 0));
 			clone.push(new sword_fade(this.x, this.y, this.width + 10, 5, this.r, this.trans, 10, 2));
-			if (touch(this.x, this.y, this.width / 2, this.height / 2, soul_x, soul_y, 30, 30)) {
-				console.log("aaa");
+			if (touch(this.x, this.y, 5, 5, soul_x, soul_y, 15, 15)) {
+				damage();
 			};
 			await sleep(15);
 		};
@@ -303,9 +308,8 @@ class laser {
 		//this.destroy = true;
 	};
 	async broadcast() {
-		if (touch(this.x, this.y, this.width / 2, this.height / 2, soul_x, soul_y, 30, 30)) {
-			console.log("aaa");
-		};
+		clone.push(new laser_hit(this.x, this.y, 10, 10, this.r + 90, 1, 120, 0));
+		clone.push(new laser_hit(this.x, this.y, 10, 10, this.r + 90, 1, 120, 1));
 		this.move = 1;
 		this.sprite = sprite_laser2;
 		this.count = Math.floor((Math.random() * 100) + 0);
@@ -413,6 +417,45 @@ class effect1 {
 		ctx.drawImage(sprite_effect1, -this.width / 2, -this.height / 2, this.width, this.height);
 		
 		ctx.restore();
+	};
+};
+
+class laser_hit {
+	constructor(x, y, width, height, r, trans, layer, mode) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.r = r;
+		this.trans = trans;
+		this.layer = layer;
+		this.mode = mode;
+		this.start();
+		
+	};
+	async start() {
+		for (let i = 0; i < 30; i++) {
+			if (touch(this.x, this.y, 5, 5, soul_x, soul_y, 15, 15)) {
+				damage();
+			};
+			if (this.mode === 1) {
+				this.x += Math.cos(this.r * Math.PI / 180) * 30;
+				this.y += Math.sin(this.r * Math.PI / 180) * 30;	
+			};
+			if (this.mode === 0) {
+				this.x += Math.cos(this.r * Math.PI / 180) * -30;
+				this.y += Math.sin(this.r * Math.PI / 180) * -30;	
+			};
+		};
+		this.destroy = true;
+	};
+	update() {
+		
+	};
+	broadcast() {
+		
+	};
+	draw() {
 	};
 };
 
