@@ -29,8 +29,8 @@ function hit() {
 function touch(img1, x1, y1, w1, h1, r1, img2, x2, y2, h2, w2, r2) {
 	const cd1 = Math.hypot(w1, h1) / 2, cd2 = Math.hypot(w2, h2) / 2;
 	const interx = Math.max(x1 - cd1, x2 - cd2), intery = Math.max(y1 - cd1, y2 - cd2);
-	const interw = Math.ceil(Math.max(x1 + cd1, x2 + cd2) - interx);
-	const interh = Math.ceil(Math.max(y1 + cd1, y2 + cd2) - intery);
+	const interw = Math.ceil(Math.min(x1 + cd1, x2 + cd2) - interx);
+	const interh = Math.ceil(Math.min(y1 + cd1, y2 + cd2) - intery);
 	if (interw <= 0 || interh <= 0) return false;
 	canvas2.width = interw; canvas2.height = interh;
 	
