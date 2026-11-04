@@ -26,7 +26,7 @@ function hit() {
 };
 
 
-function touch(img1, x1, y1, h1, w1, r1, img2, x2, y2, h2, w2, r2) {
+function touch(img1, x1, y1, w1, h1, r1, img2, x2, y2, h2, w2, r2) {
 	const cd1 = Math.hypot(w1, h1) / 2, cd2 = Math.hypot(w2, h2) / 2;
 	const interx = Math.max(x1 - cd1, x2 - cd2), intery = Math.max(y1 - cd1, y2 - cd2);
 	const interw = Math.ceil(Math.max(x1 + cd1, x2 + cd2) - interx);
@@ -50,7 +50,7 @@ function touch(img1, x1, y1, h1, w1, r1, img2, x2, y2, h2, w2, r2) {
 	ctx2.restore();
 	const b = ctx2.getImageData(0, 0, interw, interh).data;
 	
-	//ctx2.clearRect(0, 0, interw, interh);
+	ctx2.clearRect(0, 0, interw, interh);
 	
 	for (let i = 3; i < a.length; i += 4) {
 		if (a[i] > 0 && b[i] > 0) return true;
